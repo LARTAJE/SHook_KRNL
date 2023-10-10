@@ -1,7 +1,9 @@
+--[[
 local gamesList = {
     [1494262959] = 'Criminality';
     [1390601379] = 'Combat Warriors';
 }
+--]]
 
 local RemoteEvent = Instance.new("RemoteEvent")
 local RemoteFunction = Instance.new("RemoteFunction")
