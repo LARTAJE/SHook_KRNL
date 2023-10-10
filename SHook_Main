@@ -155,7 +155,7 @@ local KillSays = {
     '🤓 How do you change your difficulty settings? My game is stuck on easy with all the bots I\'m destroying 🤓';
     'Had fun getting rolled 🤐🤐? 🧠 If you wanna win use $amuelhook🧠';
 }
-
+task.wait(3)
     --// Gun metadata and grabbing gun functions
     local GunClient   = require(game:GetService("ReplicatedStorage").Modules.GunClient)
     local GunMetadata = getrawmetatable(GunClient)
