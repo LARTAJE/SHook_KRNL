@@ -141,7 +141,7 @@ local KillSays = {
     'Had fun getting rolled 🤐🤐? 🧠 If you wanna win use $amuelhook🧠';
 }
 
-if game.GameId == 1494262959 then
+if game.GameId == 1494262959 or game.GameId == 8343259840 then
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/LARTAJE/SHook_KRNL/main/SHook_Criminality"))()
 
