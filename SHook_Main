@@ -265,11 +265,6 @@ task.wait(3)
 
     --// Aim settings tab
     local AimSettings = CombatLeft:AddTab("Aim Settings") do
-        --// First feature column
-        AimSettings:AddToggle("SilentAim", { Text = "Silent aim", Tooltip = "Redirects your bullet towards the person in your FOV" }):AddColorPicker("FovColor", { Default = Color3.fromRGB(1, 1, 1) })
-        AimSettings:AddToggle("VisibilityCheck", { Text = "Visibility check", Tooltip = "Checks if the player is visible in your FOV" })
-        AimSettings:AddSlider("Hitchance", { Text = 'Hitchance', Tooltip = "The chance of silent aim redirecting your bullet", Default = 1, Min = 1, Max = 100, Rounding = 0 })
-    
         --// Second feature column
         AimSettings:AddDivider()
         AimSettings:AddSlider("FovSize", { Text = "Field of view", Tooltip = "Size of how big your fov will be", Default = 1, Min = 1, Max = 7000, Rounding = 0 })
