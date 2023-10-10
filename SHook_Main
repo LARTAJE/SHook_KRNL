@@ -1023,17 +1023,18 @@ task.wait(3)
                 return OldWrap(...)
             end
             setreadonly(getrenv().coroutine, true)
-
+task.spawn(function()
             GrabConfig = function()
-                    if Item:IsA("Tool") then
-				        for i,v in pairs(getgc(true)) do 
-
-					if type(v) == 'table' and rawget(v, 'EquipTime') then 
+            task.wait(3)
+            if Item:IsA("Tool") then
+		 for i,v in pairs(getgc(true)) do 
+		if type(v) == 'table' and rawget(v, 'EquipTime') then 
                     return v
                     end
                 end
              end
             end
+end)
             --// End of gun mod function
 
             --// Connection functions
