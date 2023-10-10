@@ -1,10 +1,6 @@
 local gamesList = {
     [1494262959] = 'Criminality';
     [1390601379] = 'Combat Warriors';
-    [358276974]  = 'Apoc 2';
-    [3495983524] = 'Apoc 2';
-    [187796008]  = 'Those Who Remain';
-    [171336322]  = 'testing';
 }
 
 local RemoteEvent = Instance.new("RemoteEvent")
