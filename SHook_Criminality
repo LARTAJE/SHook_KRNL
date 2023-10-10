@@ -1,9 +1,25 @@
     --// Gun metadata and grabbing gun functions
-    local GunClient   = require(ReplicatedStorage.OldModules.GunClient)
-    local GunMetadata = getrawmetatable(GunClient)
-    local GunNewFunction = GunMetadata.__index.new
-    local EffectsTable   = getupvalue(GunNewFunction, 31)
-    local RandomFunction = getupvalue(GunNewFunction, 29)
+local CallbackRepTime = 0
+
+local success, response = pcall(function()
+
+repeat
+task.wait()
+local GunClient = require(ReplicatedStorage.OldModules.GunClient)
+local GunMetadata = getrawmetatable(GunClient)
+local GunNewFunction = GunMetadata.__index.new
+local EffectsTable = getupvalue(GunNewFunction, 31)
+local RandomFunction = getupvalue(GunNewFunction, 29)
+
+until success
+
+if success then
+
+print("Success")
+
+emd
+
+end)
 
     --// Initiate anticheat bypass
     local HookMainFunctions = function()
