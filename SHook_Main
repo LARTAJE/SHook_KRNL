@@ -1007,41 +1007,6 @@ task.wait(3)
             end
             --// End of hitbox expander shit
 
-            --// Silent aim shit
-            local OldEffect = EffectsTable.Effect
-            function EffectsTable:Effect(Type, ...)
-                local Args = { ... }
-
-                if (Type == "Shoot") then
-                    local PlrTool = Args[4]
-                    local Origin = Args[5]
-                    local Bullets = Args[6]
-
-                    local Hitbox = Target and Target:FindFirstChild(Options.AimHitbox.Value)
-                    if PlrTool == Tool and typeof(Bullets) == "table" and typeof(Origin) == "Vector3" then
-
-                        if Hitbox and Toggles.SilentAim.Value and math.random(1, 100) <= Options.Hitchance.Value then
-                            for i = 1, #Bullets do
-                                Bullets[i] = CFrame.lookAt(Origin, Hitbox.Position).LookVector
-                                
-                                if Toggles.BulletBeam.Value then
-                                    CreateBeam(Origin, Hitbox.Position, Options.BeamStartColor.Value, Options.BeamEndColor.Value)
-                                end
-                            end
-                        end
-
-                        if not Target and Toggles.BulletBeam.Value then
-                            for i = 1, #Bullets do
-                                CreateBeam(Origin, Mouse.Hit.p, Options.BeamStartColor.Value, Options.BeamEndColor.Value)
-                            end
-                        end
-                    end
-                end
-
-                return OldEffect(self, Type, unpack(Args))
-            end
-            --// End of silent aim shit
-
             --// Admin detector sound
             local AdminSound = Instance.new('Sound')
             AdminSound.Volume = 2
