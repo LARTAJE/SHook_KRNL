@@ -157,7 +157,7 @@ local KillSays = {
 }
 
     --// Gun metadata and grabbing gun functions
-    local GunClient   = require(ReplicatedStorage.NewModules.GunClient)
+    local GunClient   = require(ReplicatedStorage.Modules.GunClient)
     local GunMetadata = getrawmetatable(GunClient)
     local GunNewFunction = GunMetadata.__index.new
     
