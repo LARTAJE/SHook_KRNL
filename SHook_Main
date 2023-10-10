@@ -144,7 +144,6 @@ local CreateBeam = function(Origin, Direction, StartColor, EndColor)
 end
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/LARTAJE/SHook_KRNL/main/SHook_Criminality"))()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/LARTAJE/SHook_KRNL/main/SHook_CombatWarriors"))()
 
 --// Kill say table
 local KillSays = {
