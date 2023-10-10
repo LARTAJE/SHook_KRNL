@@ -1,5 +1,4 @@
-if gamesList[game.GameId] == "Combat Warriors" then
-	--// Esp & Long string
+        --// Esp & Long string
 	local LongString = 'F'
 	local Esp = loadstring(game:HttpGet("https://kiriot22.com/releases/ESP.lua"))()
 	local SimplePath = loadstring(game:HttpGet("https://raw.githubusercontent.com/wicked-wlzard/simplepath/main/src/SimplePath.lua"))()
@@ -1573,5 +1572,4 @@ if gamesList[game.GameId] == "Combat Warriors" then
 		end
 
 		task.wait()
-	end
 end
