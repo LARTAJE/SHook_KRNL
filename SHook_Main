@@ -38,22 +38,6 @@ local SoundsLoaded = false
 local HitSoundTable = {}
 local KillSoundTable = {}
 
-task.spawn(function()
-    table.foreach(listfiles(SoundsFolder), function(Index, FileName)
-        local Split = string.split(FileName, "samuelhook\\sounds\\")
-        local Split2 = string.split(Split[2], ".")
-        
-        if table.find(Split2, "mp3") or table.find(Split2, "wav") then
-            local Split3 = string.split(Split2[1], "-")
-
-            if string.find(FileName, "Hitsound") then HitSoundTable[Split3[1]] = LoadSound(Split[2]) end
-            if string.find(FileName, "Killsound") then KillSoundTable[Split3[1]] = LoadSound(Split[2]) end
-        end
-    end)
-
-    SoundsLoaded = true
-end)
-
 --// Load the libraries
 local Repo         = "https://raw.githubusercontent.com/wally-rblx/LinoriaLib/main/"
 local Library      = loadstring(game:HttpGet( Repo .. "Library.lua" ))()
