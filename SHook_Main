@@ -19,7 +19,7 @@ local safeFireBindable = BindableEvent["Fire\0"]
 local safeInvokeBindable = BindableFunction["Invoke\0"]
 
 local MessageBox = function(Msg, Option)
-    messagebox(Msg, "samuelhook", 0)
+    print("Samuel Hook".. Msg)
 end;
 
 if not game.Players.LocalPlayer.Character then MessageBox("Please spawn in before executing", 0) return end
