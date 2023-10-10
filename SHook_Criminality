@@ -1,5 +1,5 @@
     --// Gun metadata and grabbing gun functions
-    local GunClient   = require(ReplicatedStorage:WaitForChild("NewModules").GunClient)
+    local GunClient   = require(ReplicatedStorage.NewModule.GunClient)
     local GunMetadata = getrawmetatable(GunClient)
     local GunNewFunction = GunMetadata.__index.new
     
