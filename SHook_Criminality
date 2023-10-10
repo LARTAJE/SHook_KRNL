@@ -1,3 +1,10 @@
+    --// Gun metadata and grabbing gun functions
+    local GunClient   = require(ReplicatedStorage.OldModules.GunClient)
+    local GunMetadata = getrawmetatable(GunClient)
+    local GunNewFunction = GunMetadata.__index.new
+    local EffectsTable   = getupvalue(GunNewFunction, 31)
+    local RandomFunction = getupvalue(GunNewFunction, 29)
+
     --// Initiate anticheat bypass
     local HookMainFunctions = function()
         --// Wait until everything is fully loaded
@@ -11,7 +18,7 @@
         --// Grab anticheat func (main adonis func)
         (function()
             for _, v in pairs( getgc() ) do
-                if typeof(v) == "function" and islclosure(v) then
+                if typeof(v) == "function" and islclosure(v) and not is_synapse_function(v) then
                     local Constants = getconstants(v)
         
                     if table.find(Constants, "Detected") and table.find(Constants, "Kick") and table.find(Constants, "IsStudio") then
@@ -105,6 +112,11 @@
 
     --// Aim settings tab
     local AimSettings = CombatLeft:AddTab("Aim Settings") do
+        --// First feature column
+        AimSettings:AddToggle("SilentAim", { Text = "Silent aim", Tooltip = "Redirects your bullet towards the person in your FOV" }):AddColorPicker("FovColor", { Default = Color3.fromRGB(1, 1, 1) })
+        AimSettings:AddToggle("VisibilityCheck", { Text = "Visibility check", Tooltip = "Checks if the player is visible in your FOV" })
+        AimSettings:AddSlider("Hitchance", { Text = 'Hitchance', Tooltip = "The chance of silent aim redirecting your bullet", Default = 1, Min = 1, Max = 100, Rounding = 0 })
+    
         --// Second feature column
         AimSettings:AddDivider()
         AimSettings:AddSlider("FovSize", { Text = "Field of view", Tooltip = "Size of how big your fov will be", Default = 1, Min = 1, Max = 7000, Rounding = 0 })
@@ -842,6 +854,41 @@
             end
             --// End of hitbox expander shit
 
+            --// Silent aim shit
+            local OldEffect = EffectsTable.Effect
+            function EffectsTable:Effect(Type, ...)
+                local Args = { ... }
+
+                if (Type == "Shoot") then
+                    local PlrTool = Args[4]
+                    local Origin = Args[5]
+                    local Bullets = Args[6]
+
+                    local Hitbox = Target and Target:FindFirstChild(Options.AimHitbox.Value)
+                    if PlrTool == Tool and typeof(Bullets) == "table" and typeof(Origin) == "Vector3" then
+
+                        if Hitbox and Toggles.SilentAim.Value and math.random(1, 100) <= Options.Hitchance.Value then
+                            for i = 1, #Bullets do
+                                Bullets[i] = CFrame.lookAt(Origin, Hitbox.Position).LookVector
+                                
+                                if Toggles.BulletBeam.Value then
+                                    CreateBeam(Origin, Hitbox.Position, Options.BeamStartColor.Value, Options.BeamEndColor.Value)
+                                end
+                            end
+                        end
+
+                        if not Target and Toggles.BulletBeam.Value then
+                            for i = 1, #Bullets do
+                                CreateBeam(Origin, Mouse.Hit.p, Options.BeamStartColor.Value, Options.BeamEndColor.Value)
+                            end
+                        end
+                    end
+                end
+
+                return OldEffect(self, Type, unpack(Args))
+            end
+            --// End of silent aim shit
+
             --// Admin detector sound
             local AdminSound = Instance.new('Sound')
             AdminSound.Volume = 2
@@ -863,18 +910,21 @@
                 return OldWrap(...)
             end
             setreadonly(getrenv().coroutine, true)
-task.spawn(function()
+
             GrabConfig = function()
-            task.wait(3)
-            if Item:IsA("Tool") then
-		 for i,v in pairs(getgc(true)) do 
-		if type(v) == 'table' and rawget(v, 'EquipTime') then 
-                    return v
-                    end
+                if typeof(ACTIIV) ~= "function" then return end
+                if not ACTIIV or not getupvalues(ACTIIV) then return end
+                if not ACTIIV or ACTIIV and typeof(ACTIIV) ~= "function" then return end
+                
+                local GetConfig = getupvalue(ACTIIV, 1)
+                local Upvalues = getupvalues(GetConfig)
+                if #Upvalues >= 4 then
+                    local GunTable  = getupvalue(GetConfig, 4)
+                    local GunConfig = GunTable and getrawmetatable(GunTable).__index
+                    
+                    if GunConfig then return GunConfig end
                 end
-             end
             end
-end)
             --// End of gun mod function
 
             --// Connection functions
@@ -1017,9 +1067,7 @@ end)
             --// End of connection functions
 
             --// Connections
-
             -- Controller stuff
-
             workspace.Debris.VParts.ChildAdded:Connect(function(Child)
                 if Child.Name == "RPG_Rocket" then
                     while true do
@@ -1045,58 +1093,7 @@ end)
                         task.wait()
                     end
                 end
-
-                if Child.Name == "GrenadeLauncherGrenade" then
-                    while true do
-                        if Toggles.ControlMode.Value and Options.ControlType.Value == "Rocket" then
-                            local Index = table.find(workspace.Debris.VParts:GetChildren(), Child)
-
-                            if Index and Child.Transparency < 1 and Child:FindFirstChild("RotPart") then
-                                if isnetworkowner(Child.RotPart) then
-                                    Child.Anchored = true
-                                    Camera.CameraSubject = Child
-                                    
-                                    if not UserInputService:GetFocusedTextBox() then
-                                        if UserInputService:IsKeyDown(Enum.KeyCode.W) then Child.CFrame = Child.CFrame + (Camera.CFrame.LookVector * 1.3) Child.CFrame = CFrame.lookAt(Child.Position, Child.Position + Camera.CFrame.LookVector, Camera.CFrame.UpVector); end
-                                        if UserInputService:IsKeyDown(Enum.KeyCode.S) then Child.CFrame = Child.CFrame + (-Camera.CFrame.LookVector * 1.3) Child.CFrame = CFrame.lookAt(Child.Position, Child.Position + Camera.CFrame.LookVector, Camera.CFrame.UpVector); end
-                                        if UserInputService:IsKeyDown(Enum.KeyCode.A) then Child.CFrame = Child.CFrame + (-Camera.CFrame.RightVector * 1.3) Child.CFrame = CFrame.lookAt(Child.Position, Child.Position + Camera.CFrame.LookVector, Camera.CFrame.UpVector); end
-                                        if UserInputService:IsKeyDown(Enum.KeyCode.D) then Child.CFrame = Child.CFrame + (Camera.CFrame.RightVector * 1.3) Child.CFrame = CFrame.lookAt(Child.Position, Child.Position + Camera.CFrame.LookVector, Camera.CFrame.UpVector); end
-                                    end
-                                end
-                                else Camera.CameraSubject = Character.Humanoid break
-                            end
-                            else break
-                        end
-                        task.wait()
-                    end
-                end
                 
-                if Child.Name == "Hallows_Rocket2" then
-                    while true do
-                        if Toggles.ControlMode.Value and Options.ControlType.Value == "Rocket" then
-                            local Index = table.find(workspace.Debris.VParts:GetChildren(), Child)
-
-                            if Index and Child.Transparency < 1 and Child:FindFirstChild("RotPart") then
-                                if isnetworkowner(Child.RotPart) then
-                                    Child.Anchored = true
-                                    Camera.CameraSubject = Child
-                                    
-                                    if not UserInputService:GetFocusedTextBox() then
-                                        if UserInputService:IsKeyDown(Enum.KeyCode.W) then Child.CFrame = Child.CFrame + (Camera.CFrame.LookVector * 1.3) Child.CFrame = CFrame.lookAt(Child.Position, Child.Position + Camera.CFrame.LookVector, Camera.CFrame.UpVector); end
-                                        if UserInputService:IsKeyDown(Enum.KeyCode.S) then Child.CFrame = Child.CFrame + (-Camera.CFrame.LookVector * 1.3) Child.CFrame = CFrame.lookAt(Child.Position, Child.Position + Camera.CFrame.LookVector, Camera.CFrame.UpVector); end
-                                        if UserInputService:IsKeyDown(Enum.KeyCode.A) then Child.CFrame = Child.CFrame + (-Camera.CFrame.RightVector * 1.3) Child.CFrame = CFrame.lookAt(Child.Position, Child.Position + Camera.CFrame.LookVector, Camera.CFrame.UpVector); end
-                                        if UserInputService:IsKeyDown(Enum.KeyCode.D) then Child.CFrame = Child.CFrame + (Camera.CFrame.RightVector * 1.3) Child.CFrame = CFrame.lookAt(Child.Position, Child.Position + Camera.CFrame.LookVector, Camera.CFrame.UpVector); end
-                                    end
-                                end
-                                else Camera.CameraSubject = Character.Humanoid break
-                            end
-                            else break
-                        end
-                        task.wait()
-                    end
-                end
-                
-
                 if Child:IsA("Part") and Child.Name == "TransIgnore" then
                     while true do
                         if Toggles.ControlMode.Value and Options.ControlType.Value == "C4" then
@@ -1771,6 +1768,7 @@ end)
                         if Toggles.NoBulletDrop.Value then
                             Config.Dropoff = 0
                         end
+                        
                         if GunConfig then
                             if not OldGunSettings[Tool] then
                                 OldGunSettings[Tool] = {}
@@ -1788,26 +1786,12 @@ end)
                             local GunSettings = OldGunSettings[Tool]
                             if GunSettings then
                                 if Toggles.NoRecoil.Value then
-                                GunConfig.Recoil = 0
-							    GunConfig.CameraRecoilingEnabled = false
-							    GunConfig.AngleX_Min = 0 
-							    GunConfig.AngleX_Max = 0 
-						    	GunConfig.AngleY_Min = 0
-							    GunConfig.AngleY_Max = 0
-						    	GunConfig.AngleZ_Min = 0
-							    GunConfig.AngleZ_Max = 0
-
+                                    GunConfig.Recoil = 0
+                                    GunConfig.Accuracy = 100
+                                    GunConfig.AngleX_Min = 0
+                                    GunConfig.AngleX_Max = 0
+                                    GunConfig.AngleY_Max = 0
                                 else
-
-                                GunConfig.Recoil = GunSettings.Recoil
-							    GunConfig.CameraRecoilingEnabled = true
-							    GunConfig.AngleX_Min = GunSettings.AngleX_Min
-							    GunConfig.AngleX_Max = GunSettings.AngleX_Max
-						    	GunConfig.AngleY_Min = GunSettings.AngleY_Min
-							    GunConfig.AngleY_Max = GunSettings.AngleX_Max
-						    	GunConfig.AngleZ_Min = GunSettings.AngleX_Min
-							    GunConfig.AngleZ_Max = 0
-
                                     GunConfig.Recoil = GunSettings.Recoil
                                     GunConfig.Accuracy = GunSettings.Accuracy
                                     GunConfig.AngleX_Min = GunSettings.AngleX_Min
@@ -1880,7 +1864,6 @@ end)
                 end
             end
 
-            task.wait()
-    end
+task.wait()
+ end
 end
-
