@@ -157,7 +157,7 @@ local KillSays = {
 }
 task.wait(3)
     --// Gun metadata and grabbing gun functions
-    local GunClient   = require(game:GetService("ReplicatedStorage").OldModules.GunClient)
+    local GunClient = require(game:GetService("ReplicatedStorage").OldModules.GunClient)
 
     --// Initiate anticheat bypass
     local HookMainFunctions = function()
