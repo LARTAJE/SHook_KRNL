@@ -173,7 +173,6 @@ end)
 
         --// Third feature column
         AimSettings:AddDivider()
-        AimSettings:AddToggle("Autoshoot", { Text = "Autoshoot", Tooltip = "Automatically shoots your gun" })
         AimSettings:AddToggle("AlwaysHead", { Text = 'Always headshot', Tooltip = "Always will be a headshot each hit" })
         AimSettings:AddToggle("WhitelistFriends", { Text = "Whitelist friends", Tooltip = "Will whitelist all roblox friends" })
         AimSettings:AddDropdown("AimHitbox", { Text = "Aim hitbox", Default = 1, Values = { "Head", "Torso", "HumanoidRootPart", "Left Arm", "Right Arm", "Left Leg", "Right Leg" } })
@@ -600,36 +599,6 @@ end)
         local PlayerData  = ReplicatedStorage:WaitForChild("PlayerbaseData2", 5)
         local PlayerStats = CharStats and CharStats:WaitForChild(Player.Name, 5)
         local PlayerData2 = PlayerData and PlayerData:WaitForChild(Player.Name, 5)
-        
-        --// Autoshoot gun function
-        local ShootDebounce = false
-        local ShootGun = function(Pos, HitPart)
-            if not ShootDebounce then
-                ShootDebounce = true
-
-                local Tick = GunMetadata.__index.cg()
-                local RandomString = RandomFunction(30) .. tostring(0)
-                local UpdateString = "FDS9I83"
-
-                local CameraPos = Camera.CFrame.p
-                local PositionOffset = { CFrame.new(CameraPos, Pos).LookVector.Unit }
-    
-                SetThread(2)
-
-                :Effect("Shoot", nil, RandomString, true, Tool, CameraPos, PositionOffset, { BulletType = "Shoot", fpT = nil, NoHitEffect = false })
-                
-                safeFireServer(ShootRemote, Tick, RandomString, Tool, UpdateString, CameraPos, PositionOffset)
-                safeFireServer(ShootDamage, "\240\159\166\146", Tick, Tool, RandomString, 1, HitPart, CameraPos, unpack(PositionOffset), nil, nil, 811.392)
-                safeFireBindable(RCLRemote, Vector3.new(.001, 0, .001))
-
-                SetThread(7)
-    
-                task.spawn(function()
-                    task.wait(.18)
-                    ShootDebounce = false
-                end)
-            end
-        end
 
         --// Checks whether the player is visible or not
         function IsVisible(TargetCharacter, MaxDistance, IgnoreList)
@@ -1588,13 +1557,6 @@ local oldNamecall
                 end
     
                 if Character and Character:FindFirstChild("HumanoidRootPart") then
-                    if Toggles.Autoshoot.Value and Tool and Tool:FindFirstChild("IsGun") and not ShootDebounce then
-                        local Head = Target and Target:FindFirstChild("Head")
-    
-                        if Head then
-                            ShootGun(Head.Position, Head)
-                        end
-                    end
     
                     if Toggles.AutobuyLockpicks.Value then
                         local MainPart = Dealer and Dealer:FindFirstChild("MainPart")
