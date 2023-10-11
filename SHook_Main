@@ -1,3 +1,4 @@
+task.wait(3) --Why UWP so strange
 local RemoteEvent = Instance.new("RemoteEvent")
 local RemoteFunction = Instance.new("RemoteFunction")
 
